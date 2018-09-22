@@ -2,9 +2,28 @@
 import requests
 import json
 import os
+from twilio.rest import Client 
+
+
+TWILIO_AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
+TWILIO_SID = os.environ['TWILIO_SID']
+SENDING_NUMBER = os.environ['SENDING_NUMBER']
+RECEIVING_NUMBER = os.environ['RECEIVING_NUMBER']
 
 
 def notify_contacts():
+
+    account_sid = TWILIO_SID 
+    auth_token = TWILIO_AUTH_TOKEN
+    client = Client(account_sid, auth_token) 
+     
+    message = client.messages.create( 
+                                  from_=SENDING_NUMBER,        
+                                  to=RECEIVING_NUMBER,
+                                  body="User feels unsafe, other pertinent info here"
+                              ) 
+     
+    print(message.sid)
 
     return "Successfully notified your contacts"
 
