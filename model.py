@@ -15,7 +15,7 @@ db = SQLAlchemy()
 
 
 class User(db.Model):
-    """ Users of Circlet website. """
+    """ Users of SafeGuard website. """
 
     __tablename__ = "users"
 
@@ -24,12 +24,6 @@ class User(db.Model):
     last_name = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(40), nullable=False, unique=True)
     password = db.Column(db.String(75), nullable=False)
-    
-
-    # Define a relationship
-    credit_card = db.relationship("CreditCards", backref=db.backref("user"))
-    circlet = db.relationship("Circlets", secondary="users_circlet", backref=db.backref("user"))
-
 
 
     def __repr__(self):
@@ -49,7 +43,7 @@ def connect_to_db(app):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///circlet'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///safeguard'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
