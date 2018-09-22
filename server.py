@@ -16,8 +16,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 import bcrypt
 
-import sendgrid
-from sendgrid.helpers.mail import *
+# import sendgrid
+# from sendgrid.helpers.mail import *
 
 import random
 
@@ -164,6 +164,25 @@ def log_me_in():
 
 def create_user(email, password):
     return "1"
+
+@app.route('/emergency-contacts')
+def emergency_contacts():
+    """Returns a page where the user can configure emergency contacts
+    """
+    return render_template('emergency-contacts.html')
+
+
+@app.route('/add-emergency-contact')
+def add_emergency_contacts():
+    """A user clicks add contact and this stores it to the db and returns a success message
+    """
+
+    #Parse request objects
+    #Store to the db
+    #return a success using AJAX
+
+    return "Contact successfully added!"
+
 
 @app.route('/sendemail')
 def send():
