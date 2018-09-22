@@ -10,6 +10,7 @@ from jinja2 import StrictUndefined
 from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 
 from model import connect_to_db, db
+from model import User
 
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -41,17 +42,14 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """ Homepage """
-    # session['user_id'] = "1"
+    session['user_id'] = "1"
     return render_template('homepage.html')
 
 
 @app.route('/register')
 def register():
     """ Homepage """
-    email = request.form.get('email')
-    password = request.form.get('password')
-    user = create_user(email, password)
-    return render_template('profile.html', user=user)
+    return render_template('register.html')
 
 
 @app.route("/verify-registration", methods=['POST'])
@@ -64,11 +62,6 @@ def verify_registration():
     last_name = request.form.get("last_name")
     email = request.form.get("email")
     password = request.form.get("password")
-
-    cc_number = request.form.get("cc-number")
-    exp_month = request.form.get("cc-month")
-    exp_year= request.form.get("cc-year")
-    cc_cvc = request.form.get("cc-cvc")
 
 
     # Hash the password because security is important
@@ -86,7 +79,7 @@ def verify_registration():
 
 
         print "New User"
-        user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_pw, created_at='2018-07-28', reliability=10, ranking=10, credit_card_id=new_cc.credit_card_id)
+        user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_pw)
         print user
 
         db.session.add(user)
@@ -105,6 +98,13 @@ def verify_registration():
         flash("You have found a website loophole... Please try again later.")
         return redirect("/")
 
+
+
+@app.route('/profile')
+def profile():
+    """Show profile
+    """
+    return render_template('profile.html')
 
 
 @app.route('/log_in')
