@@ -20,6 +20,8 @@ from sendgrid.helpers.mail import *
 
 import random
 
+import json
+
 app = Flask(__name__)
 
 # with open('hackathon-api-key.txt') as f:
@@ -190,6 +192,18 @@ def sendemail(recipient, alertbody):
     print(response.status_code)
     print(response.body)
     print(response.headers)
+
+
+@app.route('/location_warning')
+def map_test():
+    
+
+    json_data = open('sample_directions.json').read()
+    data = json.loads(json_data)
+    current_location = data['routes'][0]['legs']
+
+    return render_template('location_warning.html',
+                           current_location=current_location)
 
 
 
