@@ -20,6 +20,8 @@ from sendgrid.helpers.mail import *
 
 import random
 
+import smartcar
+
 app = Flask(__name__)
 
 # with open('hackathon-api-key.txt') as f:
