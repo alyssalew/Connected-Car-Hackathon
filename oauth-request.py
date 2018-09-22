@@ -10,8 +10,9 @@ LYFT_CLIENT_SECRET = os.environ['LYFT_CLIENT_SECRET']
 
 def o_auth():
     headers = {
-        'Content-Type': 'application/json; charset=utf8',
+        "Content-Type": "application/json",
     }
+    
     payload = {
         "grant_type": "client_credentials", 
         "scope": "public",
