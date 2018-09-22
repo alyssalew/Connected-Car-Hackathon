@@ -23,6 +23,8 @@ import random
 
 import smartcar
 
+from alertingFunctions import notify_contacts, post_to_twitter, contact_lyft 
+
 app = Flask(__name__)
 
 # with open('hackathon-api-key.txt') as f:
@@ -43,6 +45,7 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """ Homepage """
     session['user_id'] = "1"
+
     return render_template('homepage.html')
 
 
