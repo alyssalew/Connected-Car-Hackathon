@@ -10,7 +10,7 @@ from jinja2 import StrictUndefined
 from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 
 from model import connect_to_db, db
-from model import User
+from model import User, SmartCarAuth
 
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -36,6 +36,14 @@ app.secret_key = os.environ['APP_KEY']
 # error.
 app.jinja_env.undefined = StrictUndefined
 
+
+client = smartcar.AuthClient(
+    client_id=os.environ['CLIENT_ID'],
+    client_secret=os.environ['CLIENT_SECRET'],
+    redirect_uri='http://localhost:5000/callback',
+    scope=['read_vehicle_info', 'read_location', 'read_odometer']
+)
+
 #########################################################################
 ##### Routes #####
 
@@ -46,9 +54,36 @@ def index():
     return render_template('homepage.html')
 
 
+@app.route('/auth', methods=['GET'])
+def auth():
+    auth_url = client.get_auth_url(force=True)
+    return '''
+        <h1>Hello, Hackbright!</h1>
+        <a href=%s>
+          <button>Connect Car</button>
+        </a>
+    ''' % auth_url
+
+@app.route('/callback', methods=['GET'])
+def callback():
+    code = request.args.get('code')
+    access = client.exchange_code(code)
+
+    print (access)
+    response_dict = jsonify(access)
+
+
+    # token = SmartCarAuth(access_token=response_dict["access_token"])
+
+    # db.session.add(token)
+    # db.session.commit()
+
+    return response_dict
+
+
 @app.route('/register')
 def register():
-    """ Homepage """
+    """ Registration """
     return render_template('register.html')
 
 

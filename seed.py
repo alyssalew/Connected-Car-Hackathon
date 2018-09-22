@@ -1,6 +1,6 @@
 import bcrypt
 
-from model import User
+from model import User, SmartCarAuth
 
 
 from model import connect_to_db, db
