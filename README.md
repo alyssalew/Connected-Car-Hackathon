@@ -25,6 +25,7 @@ Coming Soon
 **#ByNight** is comprised of a team of software engineers from Hackbright Academy's inaugural part-time full-stack software engineering bootcamp: Marijane Castillo, Jade Paoletta, Kathryn Chew, and Alyssa Lew, as well as kickass designer Natalie Zhang. 
 
 SafeGuard was built as part of the Smartcar / Hackbright Academy Connected Car Hackathon
+
 **Built with ❤ ️and 😅 by #ByNight**
 
 
