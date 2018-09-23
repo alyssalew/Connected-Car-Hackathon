@@ -56,19 +56,24 @@ client = smartcar.AuthClient(
 ##### Routes #####
 
 @app.route('/')
-def index():
+def homepage():
     """ Homepage """
+
     session['user_id'] = "1"
 
     return render_template('homepage.html')
 
 @app.route('/ride_details')
 def ride_details():
-    """ Ride Details """
+    """ Homepage """
     # session['user_id'] = "1"
 
-
     return render_template('ride_details.html')
+
+@app.route('/emergency_mode')
+    """ Renders Emergency Mode in MockUp 3"""
+
+    return render_template('emergency_mode')
 
 
 @app.route('/auth', methods=['GET'])
