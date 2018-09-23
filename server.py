@@ -213,7 +213,7 @@ def login_confirmation():
     print results
 
 
-    return render_template('login_confirmation.html')
+    return render_template('ride_details.html')
 
 @app.route('/log_in')
 def log_me_in():
