@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form>
+  <div class="form-group">
+    <label for="fullName">Contact's Name</label>
+    <input type="phone" class="form-control" id="exampleInputPhone" aria-describedby="Phone" placeholder="Enter first name and last name">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPhone">Phone Number</label>
+    <input type="phone" class="form-control" id="exampleInputPhone" aria-describedby="Phone" placeholder="Enter Phone Number">
+    <small id="Phone" class="form-text text-muted">We'll only text this number in the case of an emergency</small>
+  </div>
+  <button type="submit" class="btn btn-primary">Add Contact</button>
+</form>
+
+<script type="text/javascript">
+    //inline JS functions...we'll add this to a separate file later (:
+</script>
+
+{% endblock %}
