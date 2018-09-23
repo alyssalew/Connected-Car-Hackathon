@@ -286,8 +286,8 @@ def add_emergency_contacts():
 
     return "Contact successfully added!"
 
-@app.route('/emergency-mode')
-def emergency_mode():
+@app.route('/emergency-mode-activated')
+def emergency_mode_activated():
     """User is in dire danger and presses emergency mode button which fires off alerts to contacts, twitter and lyft. 
     Also unlocks the doors of the vehicle
     """
