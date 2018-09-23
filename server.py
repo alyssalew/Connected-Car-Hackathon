@@ -25,7 +25,8 @@ import json
 
 import smartcar
 
-from alertingFunctions import notify_contacts_emergency, post_to_twitter, contact_lyft 
+from alertingFunctions import notify_contacts_emergency, post_to_twitter, contact_lyft
+from oauthRequest import o_auth2
 
 app = Flask(__name__)
 
@@ -84,6 +85,28 @@ def callback():
     # db.session.commit()
 
     return response_dict
+
+@app.route('/hi', methods=['GET'])
+def auth_me():
+    lyft_auth_url = o_auth2()
+    return '''
+        <h1>Hello, Me!</h1>
+        <a href=%s>
+          <button>Connect to Lyft</button>
+        </a>
+    ''' % lyft_auth_url
+
+
+@app.route('/login-confirmation')
+def login_confirm():
+    """ Confirm OAuth """
+
+    code = request.args.get('code')
+    # access = client.exchange_code(code)
+
+    print "Hello???"
+    # response_dict = jsonify(access)
+    return code
 
 
 @app.route('/register')
