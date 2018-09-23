@@ -71,6 +71,7 @@ def ride_details():
     return render_template('ride_details.html')
 
 @app.route('/emergency_mode')
+def emergency_mode_template():
     """ Renders Emergency Mode in MockUp 3"""
 
     return render_template('emergency_mode')
