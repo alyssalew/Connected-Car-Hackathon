@@ -28,7 +28,7 @@ import smartcar
 
 from requests.auth import HTTPBasicAuth
 from alertingFunctions import notify_contacts_emergency, post_to_twitter, contact_lyft
-from oauthRequest import o_auth2
+from oauthRequest import retrieve_access_token
 
 import smartcarRequest
 
@@ -57,14 +57,25 @@ client = smartcar.AuthClient(
 ##### Routes #####
 
 @app.route('/')
-def index():
+def homepage():
     """ Homepage """
+
     session['user_id'] = "1"
 
+    return render_template('homepage.html')
 
+@app.route('/ride-details')
+def ride_details():
+    """ Homepage """
+    # session['user_id'] = "1"
 
     return render_template('ride_details.html')
-    # return render_template('homepage.html')
+
+@app.route('/emergency_mode')
+def emergency_mode_template():
+    """ Renders Emergency Mode in MockUp 3"""
+
+    return render_template('emergency_mode')
 
 
 @app.route('/auth', methods=['GET'])
@@ -105,16 +116,16 @@ def auth_me():
     ''' % lyft_auth_url
 
 
-@app.route('/login-confirmation')
-def login_confirm():
-    """ Confirm OAuth """
+# @app.route('/login-confirmation')
+# def login_confirm():
+#     """ Confirm OAuth """
 
-    code = request.args.get('code')
-    # access = client.exchange_code(code)
+#     code = request.args.get('code')
+#     # access = client.exchange_code(code)
 
-    print "Hello???"
-    # response_dict = jsonify(access)
-    return code
+#     print "Hello???"
+#     # response_dict = jsonify(access)
+#     return code
 
 
 @app.route('/register')
@@ -191,7 +202,20 @@ def log_out():
 
     return redirect("/")
 
-@app.route('/log_in', methods=["POST"])
+@app.route('/login_confirmation')
+def login_confirmation():
+    """confirms once the user has loggedin"""
+
+    code = request.args.get("code")
+    print code 
+
+    results = retrieve_access_token(code)
+    print results
+
+
+    return render_template('login_confirmation.html')
+
+@app.route('/log_in')
 def log_me_in():
 
     login_email = request.form.get("email")
@@ -297,6 +321,7 @@ def activate():
     ## NEED TO FAKE UNLOCKING CAR
 
     return render_template('emergency-confirmed.html', vehicle_info=vehicle_info, coordiates=coordiates)
+
 
 @app.route('/sendemail')
 def send():

@@ -32,10 +32,6 @@
 <!-- Side Navigation Bar -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body {
-    font-family: "Lato", sans-serif;
-}
-
 .sidenav {
     height: 100%;
     width: 0;
@@ -69,19 +65,15 @@ body {
     font-size: 36px;
     margin-left: 50px;
 }
-
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
 </style>
 
-<body>
+<body class="pt-2">
+<div class="col">
 
 <div id="mySidenav" class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a href="#">Ride Details</a>
-  <a href="#">Emergency Contacts</a>
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a> 
+  <a href="/ride-details">Ride Details</a>
+  <a href="/emergency-contacts">Emergency Contacts</a>
   <a href="#">Safety Tips</a>
   <a href="#">Return to Lyft</a>
 </div>
@@ -97,7 +89,23 @@ function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
 }
 </script>
-     
+
+    <div class="container-fluid equipo-content">
+         <!-- For flash messages -->
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% block content %} put the content here {% endblock %}
+
+    </div>
+
 </body>
 <!--     <nav class="navbar navbar-expand-lg navbar-light navbar-inverse navbar-fixed-left" style="background-color: #e3f2fd;">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
@@ -129,34 +137,6 @@ function closeNav() {
   </div>
 </nav> -->
 
-    <div class="container-fluid equipo-content">
-         <!-- For flash messages -->
-
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul class="flashes">
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-        {% block content %} put the content here {% endblock %}
-
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-
-        <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> <!-- Using the full version so we can do other JQuery things -->
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-        <!-- My Javascript -->
-        <script src="/static/js/restaurant-info.js"></script>
-        <script src="/static/js/tooltips.js"></script>
-        <script src="/static/js/add-address.js"></script>
-
-    </div>
     <footer class="bd-footer text-muted">
           <div class="container-fluid p-3 p-md-5">
             <p>
@@ -165,5 +145,7 @@ function closeNav() {
             </p>
           </div>
     </footer>
+
+  </div>
   </body>
 </html>

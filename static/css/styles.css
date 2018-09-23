@@ -1,0 +1,49 @@
+.page-background {
+    background-color: #F2F2F2;
+}
+.map-background{
+    background-position: right top;
+
+}
+.safeguard-background {
+    background-color: #F8F8F9;
+}
+div.fixed {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 1000px;
+    border: 3px solid #73AD21;
+}
+
+.title-text {
+    margin-left: 100px;
+    margin-top: 30px;
+    color: #1a396b;
+}
+.safeguard-text-one {
+    margin-left: 0px;
+    margin-top: 0px;
+    color: #1a396b;
+}
+.inset {
+    border-style: ridge;
+    border-radius: 15px; 
+}
+.my-safeguards {
+    margin-left: 60px;
+    margin-top: 30px;
+    color: #1a396b;
+}
+.safeguard-countdown {
+    color: #1a396b;
+}
+
+body {
+    font-family: "Lato", sans-serif;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}

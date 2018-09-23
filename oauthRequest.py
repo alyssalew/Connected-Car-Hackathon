@@ -37,4 +37,23 @@ def o_auth2():
 
     r = requests.get("https://www.lyft.com/oauth/authorize_app", params=payload)
     print 'Status Code: {code}'.format(code=r.status_code)
+    print r
+
+
+def retrieve_access_token(auth_code):
+    headers = { 'Content-Type': 'application/json'}
+
+    data = {"grant_type": "authorization_code", "code": auth_code}
+
+    response = requests.post('https://api.lyft.com/oauth/token', headers=headers, data=data, auth=(LYFT_CLIENT_ID, LYFT_CLIENT_SECRET))
+    print 'Status Code: {code}'.format(code=response.status_code)
+    
+    return response
+
+
+
+
+
+
+
 
