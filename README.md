@@ -12,7 +12,7 @@ SafeGuard is a connected car app that ensures the safety of vulnerable rideshare
 
 ****
 ### Features
-Coming Soon
+[ Coming Soon ]
 
 ****
 ### Tech Stack
