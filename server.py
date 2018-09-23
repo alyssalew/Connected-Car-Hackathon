@@ -23,7 +23,7 @@ import random
 
 import smartcar
 
-from alertingFunctions import notify_contacts_emergency, notify_contacts_warning, post_to_twitter, contact_lyft 
+from alertingFunctions import notify_contacts_emergency, post_to_twitter, contact_lyft 
 
 app = Flask(__name__)
 
