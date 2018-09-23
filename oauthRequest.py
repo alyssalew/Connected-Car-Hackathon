@@ -46,6 +46,7 @@ def retrieve_access_token(auth_code):
     data = {"grant_type": "authorization_code", "code": auth_code}
 
     response = requests.post('https://api.lyft.com/oauth/token', headers=headers, data=data, auth=(LYFT_CLIENT_ID, LYFT_CLIENT_SECRET))
+    print(response.url)
     print 'Status Code: {code}'.format(code=response.status_code)
     
     return response
