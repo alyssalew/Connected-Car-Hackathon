@@ -64,7 +64,7 @@ def homepage():
 
     return render_template('homepage.html')
 
-@app.route('/ride-details')
+@app.route('/ride_details')
 def ride_details():
     """ Homepage """
     # session['user_id'] = "1"
