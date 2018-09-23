@@ -306,6 +306,7 @@ def activate():
     vehicle_info = smartcarRequest.get_vehicle_info(smartcarRequest.vehicle)
 
     #Text contacts, this should eventually take argument of user info
+    rider = "Jade Paoletta" #hardcoded, but should be pulled from user profile
     notify_contacts_emergency(rider)
 
     #Get location of the car
