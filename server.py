@@ -30,6 +30,7 @@ from requests.auth import HTTPBasicAuth
 from alertingFunctions import notify_contacts_emergency, post_to_twitter, contact_lyft
 from oauthRequest import o_auth2
 
+import smartcarRequest
 
 app = Flask(__name__)
 
@@ -49,7 +50,7 @@ client = smartcar.AuthClient(
     client_id=os.environ['CLIENT_ID'],
     client_secret=os.environ['CLIENT_SECRET'],
     redirect_uri='http://localhost:5000/callback',
-    scope=['read_vehicle_info', 'read_location', 'read_odometer']
+    scope=['read_vehicle_info', 'read_location', 'read_odometer','control_security', 'control_security:unlock', 'control_security:lock']
 )
 
 #########################################################################
@@ -91,6 +92,7 @@ def callback():
     # db.session.commit()
 
     return response_dict
+    # return code
 
 @app.route('/hi', methods=['GET'])
 def auth_me():
@@ -269,18 +271,32 @@ def emergency_mode():
     rider = "Jade Paoletta" #hardcoded, but should be pulled from user profile
     #Call Lyft API to get info about the driver's car, store in object
 
+    flash("Emergency Mode has been activated! Try to get away from the situation and to safety")
+    return redirect("/")
+
+
+@app.route('/activate-emergency-mode')
+def activate():
+
+    # Get vehicle info
+    vehicle_info = smartcarRequest.get_vehicle_info(smartcarRequest.vehicle)
+
     #Text contacts, this should eventually take argument of user info
-    notify_contacts_emergency(rider) 
+    notify_contacts_emergency(rider)
+
+    #Get location of the car
+    location = smartcarRequest.get_location(smartcarRequest.vehicle)
+    coordiates = smartcarRequest.get_coordiates(location)
 
     #Post to twitter
 
     #Contact Lyft
 
     #Unlock the doors
+    # print smartcarRequest.unlock_car(smartcarRequest.vehicle)
+    ## NEED TO FAKE UNLOCKING CAR
 
-    flash("Emergency Mode has been activated! Try to get away from the situation and to safety")
-    return redirect("/")
-
+    return render_template('emergency-confirmed.html', vehicle_info=vehicle_info, coordiates=coordiates)
 
 @app.route('/sendemail')
 def send():
