@@ -21,6 +21,8 @@ import bcrypt
 
 import random
 
+import json
+
 import smartcar
 
 from alertingFunctions import notify_contacts, post_to_twitter, contact_lyft 
@@ -463,6 +465,18 @@ def rapid_giv():
                                fname=fname, tracking_url=tracking_url)
 
     return render_template("rapid_small_giv.html")
+
+
+@app.route('/location_warning')
+def map_test():
+    
+
+    json_data = open('sample_directions.json').read()
+    data = json.loads(json_data)
+    current_location = data['routes'][0]['legs']
+
+    return render_template('location_warning.html',
+                           current_location=current_location)
 
 
 
