@@ -23,7 +23,7 @@ import random
 
 import smartcar
 
-from alertingFunctions import notify_contacts, post_to_twitter, contact_lyft 
+from alertingFunctions import notify_contacts_emergency, notify_contacts_warning, post_to_twitter, contact_lyft 
 
 app = Flask(__name__)
 
@@ -185,6 +185,27 @@ def add_emergency_contacts():
     #return a success using AJAX
 
     return "Contact successfully added!"
+
+@app.route('/emergency-mode')
+def emergency_mode():
+    """User is in dire danger and presses emergency mode button which fires off alerts to contacts, twitter and lyft. 
+    Also unlocks the doors of the vehicle
+    """
+
+    rider = "Jade Paoletta" #hardcoded, but should be pulled from user profile
+    #Call Lyft API to get info about the driver's car, store in object
+
+    #Text contacts, this should eventually take argument of user info
+    notify_contacts_emergency(rider) 
+
+    #Post to twitter
+
+    #Contact Lyft
+
+    #Unlock the doors
+
+    flash("Emergency Mode has been activated! Try to get away from the situation and to safety")
+    return redirect("/")
 
 
 @app.route('/sendemail')
