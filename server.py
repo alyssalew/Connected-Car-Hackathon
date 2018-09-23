@@ -28,7 +28,7 @@ import smartcar
 
 from requests.auth import HTTPBasicAuth
 from alertingFunctions import notify_contacts_emergency, post_to_twitter, contact_lyft
-from oauthRequest import o_auth2
+from oauthRequest import retrieve_access_token
 
 
 app = Flask(__name__)
@@ -113,16 +113,16 @@ def auth_me():
     ''' % lyft_auth_url
 
 
-@app.route('/login-confirmation')
-def login_confirm():
-    """ Confirm OAuth """
+# @app.route('/login-confirmation')
+# def login_confirm():
+#     """ Confirm OAuth """
 
-    code = request.args.get('code')
-    # access = client.exchange_code(code)
+#     code = request.args.get('code')
+#     # access = client.exchange_code(code)
 
-    print "Hello???"
-    # response_dict = jsonify(access)
-    return code
+#     print "Hello???"
+#     # response_dict = jsonify(access)
+#     return code
 
 
 @app.route('/register')
@@ -199,7 +199,20 @@ def log_out():
 
     return redirect("/")
 
-@app.route('/log_in', methods=["POST"])
+@app.route('/login_confirmation')
+def login_confirmation():
+    """confirms once the user has loggedin"""
+
+    code = request.args.get("code")
+    print code 
+
+    results = retrieve_access_token(code)
+    print results
+
+
+    return render_template('login_confirmation.html')
+
+@app.route('/log_in')
 def log_me_in():
 
     login_email = request.form.get("email")
@@ -287,6 +300,7 @@ def emergency_mode():
     #Contact Lyft
 
     #Unlock the doors
+
 
     flash("Emergency Mode has been activated! Try to get away from the situation and to safety")
     return redirect("/")
