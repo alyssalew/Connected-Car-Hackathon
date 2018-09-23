@@ -10,7 +10,7 @@ LYFT_CLIENT_SECRET = os.environ['LYFT_CLIENT_SECRET']
 
 def o_auth():
     headers = {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
     }
     
     payload = {
