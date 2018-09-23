@@ -36,6 +36,24 @@ class User(db.Model):
                                                                         self.email
                                                                         )
 
+class SmartCarAuth(db.Model):
+    """ Tokens for SmartCar Auth """
+
+    __tablename__ = "smartcarauth"
+
+    token_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    access_token = db.Column(db.String(40), nullable=False, unique=True)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<SmartCarAuth token_id={} access_token={}>".format(self.token_id,
+                                                                self.access_token,
+                                                                )
+
+
+
+
 ##############################################################################
 # Helper functions
 

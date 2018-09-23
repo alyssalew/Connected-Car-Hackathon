@@ -11,16 +11,17 @@ SENDING_NUMBER = os.environ['SENDING_NUMBER']
 RECEIVING_NUMBER = os.environ['RECEIVING_NUMBER']
 
 
-def notify_contacts():
+def notify_contacts_emergency(user):
 
     account_sid = TWILIO_SID 
     auth_token = TWILIO_AUTH_TOKEN
     client = Client(account_sid, auth_token) 
+    text_message="SAFEGUARD ALERT: {user} has activated emergency mode! other pertinent info here".format(user=user)
      
     message = client.messages.create( 
                                   from_=SENDING_NUMBER,        
                                   to=RECEIVING_NUMBER,
-                                  body="User feels unsafe, other pertinent info here"
+                                  body=text_message
                               ) 
      
     print(message.sid)

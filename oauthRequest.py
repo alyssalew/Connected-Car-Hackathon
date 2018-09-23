@@ -10,7 +10,7 @@ LYFT_CLIENT_SECRET = os.environ['LYFT_CLIENT_SECRET']
 
 def o_auth():
     headers = {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
     }
     
     payload = {
@@ -20,7 +20,21 @@ def o_auth():
     }
 
     r = requests.post("https://api.lyft.com/oauth/token", headers=headers, params=payload)
+    print r
     print 'Status Code: {code}'.format(code=r.status_code)
     print r.json()
 
-o_auth()
+# o_auth()
+
+def o_auth2():
+
+    payload = {
+        "client_id": LYFT_CLIENT_ID,
+        "scope": "public%20profile%20rides.read%20rides.request",
+        "state":"hello",
+        "response_type":"code"
+    }
+
+    r = requests.get("https://www.lyft.com/oauth/authorize_app", params=payload)
+    print 'Status Code: {code}'.format(code=r.status_code)
+

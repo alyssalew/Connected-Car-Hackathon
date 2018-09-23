@@ -10,7 +10,7 @@ from jinja2 import StrictUndefined
 from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 
 from model import connect_to_db, db
-from model import User
+from model import User, SmartCarAuth
 
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -21,9 +21,15 @@ import bcrypt
 
 import random
 
+import json
+
 import smartcar
 
+
 from requests.auth import HTTPBasicAuth
+from alertingFunctions import notify_contacts_emergency, post_to_twitter, contact_lyft
+from oauthRequest import o_auth2
+
 
 app = Flask(__name__)
 
@@ -38,6 +44,14 @@ app.secret_key = os.environ['APP_KEY']
 # error.
 app.jinja_env.undefined = StrictUndefined
 
+
+client = smartcar.AuthClient(
+    client_id=os.environ['CLIENT_ID'],
+    client_secret=os.environ['CLIENT_SECRET'],
+    redirect_uri='http://localhost:5000/callback',
+    scope=['read_vehicle_info', 'read_location', 'read_odometer']
+)
+
 #########################################################################
 ##### Routes #####
 
@@ -47,12 +61,63 @@ def index():
     session['user_id'] = "1"
 
 
+
     return render_template('ride_details.html')
+    # return render_template('homepage.html')
+
+
+@app.route('/auth', methods=['GET'])
+def auth():
+    auth_url = client.get_auth_url(force=True)
+    return '''
+        <h1>Hello, Hackbright!</h1>
+        <a href=%s>
+          <button>Connect Car</button>
+        </a>
+    ''' % auth_url
+
+@app.route('/callback', methods=['GET'])
+def callback():
+    code = request.args.get('code')
+    access = client.exchange_code(code)
+
+    print (access)
+    response_dict = jsonify(access)
+
+
+    # token = SmartCarAuth(access_token=response_dict["access_token"])
+
+    # db.session.add(token)
+    # db.session.commit()
+
+    return response_dict
+
+@app.route('/hi', methods=['GET'])
+def auth_me():
+    lyft_auth_url = o_auth2()
+    return '''
+        <h1>Hello, Me!</h1>
+        <a href=%s>
+          <button>Connect to Lyft</button>
+        </a>
+    ''' % lyft_auth_url
+
+
+@app.route('/login-confirmation')
+def login_confirm():
+    """ Confirm OAuth """
+
+    code = request.args.get('code')
+    # access = client.exchange_code(code)
+
+    print "Hello???"
+    # response_dict = jsonify(access)
+    return code
 
 
 @app.route('/register')
 def register():
-    """ Homepage """
+    """ Registration """
     return render_template('register.html')
 
 
@@ -195,6 +260,27 @@ def add_emergency_contacts():
 
     return "Contact successfully added!"
 
+@app.route('/emergency-mode')
+def emergency_mode():
+    """User is in dire danger and presses emergency mode button which fires off alerts to contacts, twitter and lyft. 
+    Also unlocks the doors of the vehicle
+    """
+
+    rider = "Jade Paoletta" #hardcoded, but should be pulled from user profile
+    #Call Lyft API to get info about the driver's car, store in object
+
+    #Text contacts, this should eventually take argument of user info
+    notify_contacts_emergency(rider) 
+
+    #Post to twitter
+
+    #Contact Lyft
+
+    #Unlock the doors
+
+    flash("Emergency Mode has been activated! Try to get away from the situation and to safety")
+    return redirect("/")
+
 
 @app.route('/sendemail')
 def send():
@@ -292,6 +378,18 @@ def destination_warning():
     longitude = google_location_dictionary["lng"]
     print "I am longitude", longitude
 
+
+
+@app.route('/location_warning')
+def map_test():
+    
+
+    json_data = open('sample_directions.json').read()
+    data = json.loads(json_data)
+    current_location = data['routes'][0]['legs']
+
+    return render_template('location_warning.html',
+                           current_location=current_location)
 
 
 
