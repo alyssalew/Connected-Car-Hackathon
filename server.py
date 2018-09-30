@@ -30,6 +30,7 @@ from requests.auth import HTTPBasicAuth
 from alertingFunctions import notify_contacts_emergency, post_to_twitter, contact_lyft
 from oauthRequest import retrieve_access_token
 
+#### Comment out to run server to re-generate SmartCar Access Token ####
 import smartcarRequest
 
 app = Flask(__name__)
@@ -50,6 +51,7 @@ client = smartcar.AuthClient(
     client_id=os.environ['CLIENT_ID'],
     client_secret=os.environ['CLIENT_SECRET'],
     redirect_uri='http://localhost:5000/callback',
+    test_mode='test',
     scope=['read_vehicle_info', 'read_location', 'read_odometer','control_security', 'control_security:unlock', 'control_security:lock']
 )
 
@@ -82,7 +84,8 @@ def emergency_mode_template():
 def auth():
     auth_url = client.get_auth_url(force=True)
     return '''
-        <h1>Hello, Hackbright!</h1>
+        <h1>Hello!</h1>
+        <h2>This app would like access to your car(s). Please click the button to connect. </h2>
         <a href=%s>
           <button>Connect Car</button>
         </a>
@@ -102,7 +105,16 @@ def callback():
     # db.session.add(token)
     # db.session.commit()
 
-    return response_dict
+    # Store token in session
+    session['access_token'] = access['access_token']
+    access_token = session['access_token']
+
+    print "This is the token:", access_token
+
+    return '''
+        <h2> Thank you for giving access to your car(s)! </h2>
+    '''
+    
     # return code
 
 @app.route('/hi', methods=['GET'])
@@ -301,16 +313,23 @@ def emergency_mode():
 
 @app.route('/activate-emergency-mode')
 def activate():
+    access_token = session.get('access_token')
+    print access_token
+
+    # Get vehicle object
+    vehicle = smartcarRequest.get_a_vehicle(access_token)
 
     # Get vehicle info
-    vehicle_info = smartcarRequest.get_vehicle_info(smartcarRequest.vehicle)
+    vehicle_info = smartcarRequest.get_vehicle_info(vehicle)
 
     #Text contacts, this should eventually take argument of user info
     rider = "Jade Paoletta" #hardcoded, but should be pulled from user profile
-    notify_contacts_emergency(rider)
+
+    ########## Comment out to turn off text notifications! ##############
+    # notify_contacts_emergency(rider)
 
     #Get location of the car
-    location = smartcarRequest.get_location(smartcarRequest.vehicle)
+    location = smartcarRequest.get_location(vehicle)
     coordiates = smartcarRequest.get_coordiates(location)
 
     #Post to twitter
