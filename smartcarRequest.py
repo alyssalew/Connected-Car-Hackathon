@@ -1,11 +1,15 @@
 import smartcar
 
-access_token = '2e19892d-fb31-4dfe-8980-b7da1b2b47a0'
+# access_token = '2e19892d-fb31-4dfe-8980-b7da1b2b47a0'
 
-response = smartcar.get_vehicle_ids(access_token)
-vid = response['vehicles'][0]
-vehicle = smartcar.Vehicle(vid, access_token)
 
+def get_a_vehicle(access_token):
+    """ Gets vehicle object asssocited with 1st ID """
+    response = smartcar.get_vehicle_ids(access_token)
+    vid = response['vehicles'][0]
+    vehicle = smartcar.Vehicle(vid, access_token)
+
+    return vehicle
 
 def get_vehicle_info(vehicle):
     """Get the info vehicle"""
@@ -43,9 +47,9 @@ def get_coordiates(location):
 
 
 # print get_vehicle_info(vehicle)
-print get_location(vehicle)
+# print get_location(vehicle)
 # print lock_car(vehicle)
 # print unlock_car(vehicle)
 # print get_odometer(vehicle)
-location = get_location(vehicle)
-print get_coordiates(location)
+# location = get_location(vehicle)
+# print get_coordiates(location)
