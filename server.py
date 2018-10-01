@@ -219,13 +219,13 @@ def login_confirmation():
     """confirms once the user has loggedin"""
 
     code = request.args.get("code")
-    print code 
+    print code
 
     results = retrieve_access_token(code)
     print results
 
 
-    return render_template('ride_details.html')
+    return redirect("/ride_details")
 
 @app.route('/log_in')
 def log_me_in():
@@ -313,6 +313,9 @@ def emergency_mode():
 
 @app.route('/activate-emergency-mode')
 def activate():
+    """User is in dire danger and presses emergency mode button which fires off alerts to contacts, twitter and lyft. 
+    Also unlocks the doors of the vehicle
+    """
     access_token = session.get('access_token')
     print access_token
 
