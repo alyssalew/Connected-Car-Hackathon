@@ -58,28 +58,7 @@ client = smartcar.AuthClient(
 #########################################################################
 ##### Routes #####
 
-@app.route('/')
-def homepage():
-    """ Homepage """
-
-    session['user_id'] = "1"
-
-    return render_template('homepage.html')
-
-@app.route('/ride_details')
-def ride_details():
-    """ Homepage """
-    # session['user_id'] = "1"
-
-    return render_template('ride_details.html')
-
-@app.route('/emergency_mode')
-def emergency_mode_template():
-    """ Renders Emergency Mode in MockUp 3"""
-
-    return render_template('emergency_mode.html')
-
-
+##### Auth SmartCar [To be put on driver-side] #####
 @app.route('/auth', methods=['GET'])
 def auth():
     auth_url = client.get_auth_url(force=True)
@@ -114,102 +93,26 @@ def callback():
     return '''
         <h2> Thank you for giving access to your car(s)! </h2>
     '''
-    
+
     # return code
 
-@app.route('/hi', methods=['GET'])
-def auth_me():
-    lyft_auth_url = o_auth2()
-    return '''
-        <h1>Hello, Me!</h1>
-        <a href=%s>
-          <button>Connect to Lyft</button>
-        </a>
-    ''' % lyft_auth_url
 
+####### Rider-side routes #######
+@app.route('/')
+def homepage():
+    """ Homepage """
 
-# @app.route('/login-confirmation')
-# def login_confirm():
-#     """ Confirm OAuth """
-
-#     code = request.args.get('code')
-#     # access = client.exchange_code(code)
-
-#     print "Hello???"
-#     # response_dict = jsonify(access)
-#     return code
-
-
-@app.route('/register')
-def register():
-    """ Registration """
-    return render_template('register.html')
-
-
-@app.route("/verify-registration", methods=['POST'])
-def verify_registration():
-    """ Verify registration form """
-
-    print "User Registration"
-
-    first_name = request.form.get("first_name")
-    last_name = request.form.get("last_name")
-    email = request.form.get("email")
-    password = request.form.get("password")
-
-
-    # Hash the password because security is important
-    hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-
-    print "First:", first_name
-    print "Last:", last_name
-    print "Email:", email
-    print "PW:", hashed_pw
-
-    # Look for the email in the DB
-    existing_user = User.query.filter(User.email == email).all()
-
-    if len(existing_user) == 0:
-
-
-        print "New User"
-        user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_pw)
-        print user
-
-        db.session.add(user)
-        db.session.commit()
-
-        flash("You are now registered!")
-        return redirect('/profile')
-
-    elif len(existing_user) == 1:
-        print "Existing user"
-        flash("You're already registered!")
-        return redirect('/')
-
-    else:
-        print "MAJOR PROBLEM!"
-        flash("You have found a website loophole... Please try again later.")
-        return redirect("/")
-
-
-
-@app.route('/profile')
-def profile():
-    """Show profile
-    """
-    return render_template('profile.html')
-
+    session['user_id'] = "1"
+    return render_template('homepage.html')
 
 @app.route('/log_in')
 def log_in():
-    """Allows user to log in
-    """
+    """Allows user to log in """
     return render_template('log_in.html')
 
 @app.route("/log_out")
 def log_out():
-    """allow user to log out of Givr."""
+    """allow user to log out """
     session.clear()
 
     return redirect("/")
@@ -219,66 +122,20 @@ def login_confirmation():
     """confirms once the user has loggedin"""
 
     code = request.args.get("code")
-    print code 
+    print code
 
     results = retrieve_access_token(code)
     print results
 
+    return redirect("/ride_details")
+
+@app.route('/ride_details')
+def ride_details():
+    """ Homepage """
+    # session['user_id'] = "1"
 
     return render_template('ride_details.html')
 
-@app.route('/log_in')
-def log_me_in():
-
-    login_email = request.form.get("email")
-    login_password = request.form.get("password")
-
-    print login_email, login_password
-
-    # Get user object
-    existing_user = User.query.filter(User.email == login_email).all()
-
-    # In DB?
-    if len(existing_user) == 1:
-        print "Email in DB"
-        existing_password = existing_user[0].password
-
-        # Correct password (hashed)?
-        if bcrypt.hashpw(login_password.encode('utf-8'), existing_password.encode('utf-8')) == existing_password:
-            if 'login' in session:
-                flash("You are already logged in!")
-                return redirect('/')
-            else:
-                #Add to session
-                session['user_id'] = existing_user[0].user_id
-                flash("Hi {}, you are now logged in!".format(existing_user[0].first_name))
-                return redirect('/')
-        else:
-            flash("Incorrect password. Please try again.")
-            return redirect('/log_in')
-
-    # Not in DB
-    elif len(existing_user) == 0:
-        print "Email not in DB"
-        flash("That email couldn't be found. Please try again.")
-        return redirect('/log_in')
-
-    else:
-        print "MAJOR PROBLEM!"
-        flash("You have found a website loophole... Please try again later.")
-        return redirect("/")
-
-    if method == ["POST"]:
-
-        at_destination = false
-
-        if at_destination == false:
-
-            return redirect("/")
-
-
-def create_user(email, password):
-    return "1"
 
 @app.route('/emergency-contacts')
 def emergency_contacts():
@@ -298,21 +155,17 @@ def add_emergency_contacts():
 
     return "Contact successfully added!"
 
-@app.route('/emergency-mode')
-def emergency_mode():
-    """User is in dire danger and presses emergency mode button which fires off alerts to contacts, twitter and lyft. 
-    Also unlocks the doors of the vehicle
-    """
+@app.route('/emergency_mode')
+def emergency_mode_template():
+    """ Renders Emergency Mode in MockUp 3"""
 
-    rider = "Jade Paoletta" #hardcoded, but should be pulled from user profile
-    #Call Lyft API to get info about the driver's car, store in object
-
-    flash("Emergency Mode has been activated! Try to get away from the situation and to safety")
-    return redirect("/")
-
+    return render_template('emergency_mode.html')
 
 @app.route('/activate-emergency-mode')
 def activate():
+    """User is in dire danger and presses emergency mode button which fires off alerts to contacts, twitter and lyft. 
+    Also unlocks the doors of the vehicle
+    """
     access_token = session.get('access_token')
     print access_token
 
@@ -370,43 +223,6 @@ def sendemail(recipient, alertbody):
     print(response.status_code)
     print(response.body)
     print(response.headers)
-
-
-# def make_recipient():
-#     """Instantiating a new Recipient """
-#     print "Getting ready to instantiate a new recipient"
-
-#     address = "833 Calmar Avenue"
-#     city = "Oakland"
-#     state = "CA"
-#     zipcode = "94610"
-
-#     # address = actual_destination.rstrip()
-
-#     # address, city, N = row.split(",")
-#     # state, zipcode = N.split(" ")
-
-#     response = requests.get('https://maps.googleapis.com/maps/api/geocode/json?address=address,+city+state,+zipcode')
-
-#     resp_json_payload = response.json()
-
-#     print(resp_json_payload['results'][0]['geometry']['location'])
-
-
-    # recipient = Recipient(recipient_id=recipient_id,
-    #                       address=address,
-    #                       city=city,
-    #                       state=state,
-    #                       zipcode=zipcode,
-    #                       latitude=latitude,
-    #                       longitude=longitude,
-    #                       recipient_type=recipient_type)
-
-
-    # # Flash success message or redirct user
-    # db.session.add(giv)
-    # db.session.commit()
-
 
 @app.route("/destination_warning", methods=['POST', 'GET'])
 def destination_warning():
